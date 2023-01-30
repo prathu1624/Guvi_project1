@@ -3,13 +3,14 @@
 #installing SNSCRAPE library
 #pip install snscrape #to be done in CMD
 import streamlit as st
-import datetime
+
 
   
 
 #importing required modules
 import pandas as pd
 import snscrape.modules.twitter as sntwitter
+import datetime
 
 #scraping the required data
 def twitter_scrape(query,limit):
@@ -24,16 +25,15 @@ def twitter_scrape(query,limit):
   df = pd.DataFrame(tweets, columns=['date and time','id','content','user','reply','retweetcount','language','source','likecount'])
   return df
 
-  
+ #uploading dataframe to MongoDB 
 def mongo_up(df):
-#uploading dataframe to MongoDB
-  from pymongo import MongoClient
+  from pymongo import MongoClient #importing the MongoClient
   py = MongoClient(#enter your MongoDB url)
-  p1 = py["Projects_GUVI"]
-  project_collect = p1["Twitter_data"]
-  project_collect.insert_many(df.to_dict('records'))
+  p1 = py["Projects_GUVI"] #Creating a database
+  project_collect = p1["Twitter_data"] #creating a collection
+  project_collect.insert_many(df.to_dict('records')) #inserting the scraped values in the collection
   
-#streamlit
+#streamlit function
 def streamlit():
   st.title("Twitter data scrapping")
   st.header("This is twitter scraper by Prathamesh.") 
@@ -52,5 +52,6 @@ def streamlit():
   st.download_button("Download CSV", data = data.to_csv(), file_name="CSV_data")
   st.download_button("Download json", data = data.to_json(), file_name="json_data")  
     
+#calling the main function of streamlit    
 maincall = streamlit()
 
