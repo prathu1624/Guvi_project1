@@ -1,16 +1,14 @@
-
-
 #installing SNSCRAPE library
-#pip install snscrape #to be done in CMD
+#pip install snscrape
+#streamlit block
 import streamlit as st
-
+import datetime
 
   
 
 #importing required modules
 import pandas as pd
 import snscrape.modules.twitter as sntwitter
-import datetime
 
 #scraping the required data
 def twitter_scrape(query,limit):
@@ -23,27 +21,30 @@ def twitter_scrape(query,limit):
     if i == limit:
       break
   df = pd.DataFrame(tweets, columns=['date and time','id','content','user','reply','retweetcount','language','source','likecount'])
-  return df
+  df_sort = df.sort_values(by = 'date and time', ascending= False)
+  return df_sort
 
- #uploading dataframe to MongoDB 
-def mongo_up(df):
-  from pymongo import MongoClient #importing the MongoClient
-  py = MongoClient(#enter your MongoDB url)
-  p1 = py["Projects_GUVI"] #Creating a database
-  project_collect = p1["Twitter_data"] #creating a collection
-  project_collect.insert_many(df.to_dict('records')) #inserting the scraped values in the collection
+
   
-#streamlit function
+def mongo_up(df):
+#uploading dataframe to MongoDB
+  from pymongo import MongoClient
+  py = MongoClient(#Enter your MongoDB link here)
+  p1 = py["Projects_GUVI"]
+  project_collect = p1["Twitter_data"]
+  project_collect.insert_many(df.to_dict('records'))
+  
+#streamlit
 def streamlit():
   st.title("Twitter data scrapping")
   st.header("This is twitter scraper by Prathamesh.") 
   text = st.text_input("Text")
   htag = st.text_input("#Hashtag", placeholder = "Enter the hashtag", disabled = False, label_visibility='visible')
   uname = st.text_input("username", placeholder = "Enter the username", disabled = False, label_visibility='visible')
-  startdt = st.date_input("Start date")
-  enddt = st.date_input("End date")
+  startdt = st.date_input("Start date", datetime.date(2019,7,4))
+  enddt = st.date_input("End date",datetime.date(2019,7,4))
   query = f"{text} (#{htag}) (from:{uname}) since:{startdt} until:{enddt}"
-  limit=st.number_input("Max number of tweets", disabled = False, label_visibility = 'visible')
+  limit=st.slider("No. of tweets", min_value=0, max_value=1000,label_visibility="visible")
   limit = int(limit)
   data = twitter_scrape(query,limit)
   st.dataframe(data=data)
@@ -52,6 +53,7 @@ def streamlit():
   st.download_button("Download CSV", data = data.to_csv(), file_name="CSV_data")
   st.download_button("Download json", data = data.to_json(), file_name="json_data")  
     
-#calling the main function of streamlit    
 maincall = streamlit()
+
+
 
