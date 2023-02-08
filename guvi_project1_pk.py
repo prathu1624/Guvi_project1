@@ -29,7 +29,7 @@ def twitter_scrape(query,limit):
 def mongo_up(df):
 #uploading dataframe to MongoDB
   from pymongo import MongoClient
-  py = MongoClient(#Enter your MongoDB link here)
+  py = MongoClient("mongodb://guvi_prathu:prathu123@ac-xbyzunm-shard-00-00.i9y6wxn.mongodb.net:27017,ac-xbyzunm-shard-00-01.i9y6wxn.mongodb.net:27017,ac-xbyzunm-shard-00-02.i9y6wxn.mongodb.net:27017/?ssl=true&replicaSet=atlas-13sxpi-shard-0&authSource=admin&retryWrites=true&w=majority")
   p1 = py["Projects_GUVI"]
   project_collect = p1["Twitter_data"]
   project_collect.insert_many(df.to_dict('records'))
@@ -54,6 +54,3 @@ def streamlit():
   st.download_button("Download json", data = data.to_json(), file_name="json_data")  
     
 maincall = streamlit()
-
-
-
