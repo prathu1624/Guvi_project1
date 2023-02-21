@@ -37,7 +37,7 @@ def mongo_up(df):
 #streamlit
 def streamlit():
   st.title("Twitter data scrapping")
-  st.header("This is twitter scraper by Prathamesh.") 
+  st.header("Welcome to twitter scraper by Prathamesh.") 
   text = st.text_input("Text")
   htag = st.text_input("#Hashtag", placeholder = "Enter the hashtag", disabled = False, label_visibility='visible')
   uname = st.text_input("username", placeholder = "Enter the username", disabled = False, label_visibility='visible')
