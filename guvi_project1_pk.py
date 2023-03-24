@@ -29,20 +29,20 @@ def twitter_scrape(query,limit):
 def mongo_up(df):
 #uploading dataframe to MongoDB
   from pymongo import MongoClient
-  py = MongoClient(#to be replaced with your own MongoDB link in quotation marks)
+  py = MongoClient("mongodb://guvi_prathu:prathu123@ac-xbyzunm-shard-00-00.i9y6wxn.mongodb.net:27017,ac-xbyzunm-shard-00-01.i9y6wxn.mongodb.net:27017,ac-xbyzunm-shard-00-02.i9y6wxn.mongodb.net:27017/?ssl=true&replicaSet=atlas-13sxpi-shard-0&authSource=admin&retryWrites=true&w=majority")
   p1 = py["Projects_GUVI"]
   project_collect = p1["Twitter_data"]
   project_collect.insert_many(df.to_dict('records'))
   
 #streamlit
 def streamlit():
-  st.title("Twitter data scrapping")
-  st.header("Welcome to twitter scraper by Prathamesh.") 
-  text = st.text_input("Text")
+  st.title(":blue[Twitter Scrapping]")
+  st.header(":violet[Welcome to twitter scrapper by Prathamesh.]") 
+  text = st.text_input("Search Query")
   htag = st.text_input("#Hashtag", placeholder = "Enter the hashtag", disabled = False, label_visibility='visible')
   uname = st.text_input("username", placeholder = "Enter the username", disabled = False, label_visibility='visible')
-  startdt = st.date_input("Start date", datetime.date(2019,7,4))
-  enddt = st.date_input("End date",datetime.date(2019,7,4))
+  startdt = st.date_input("Start date", datetime.date(2023,1,4))
+  enddt = st.date_input("End date",datetime.date(2023,1,4))
   query = f"{text} (#{htag}) (from:{uname}) since:{startdt} until:{enddt}"
   limit=st.slider("No. of tweets", min_value=0, max_value=1000,label_visibility="visible")
   limit = int(limit)
