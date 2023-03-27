@@ -29,24 +29,25 @@ def twitter_scrape(query,limit):
 def mongo_up(df):
 #uploading dataframe to MongoDB
   from pymongo import MongoClient
-  py = MongoClient(#replace with your MongoDB link)
+  py = MongoClient(#Enter your own MongoDB link)
   p1 = py["Projects_GUVI"]
   project_collect = p1["Twitter_data"]
   project_collect.insert_many(df.to_dict('records'))
   
 #streamlit
 def streamlit():
+  
   st.title(":blue[Twitter Scrapping]")
   st.header(":violet[Welcome to twitter scrapper by Prathamesh.]") 
-  text = st.text_input("Search Query")
-  htag = st.text_input("#Hashtag", placeholder = "Enter the hashtag", disabled = False, label_visibility='visible')
+  text = st.text_input("Search Query", placeholder = "Enter your query")
   uname = st.text_input("username", placeholder = "Enter the username", disabled = False, label_visibility='visible')
   startdt = st.date_input("Start date", datetime.date(2023,1,4))
   enddt = st.date_input("End date",datetime.date(2023,1,4))
-  query = f"{text} (#{htag}) (from:{uname}) since:{startdt} until:{enddt}"
-  limit=st.slider("No. of tweets", min_value=0, max_value=1000,label_visibility="visible")
+  query = f"{text} (from:{uname}) since:{startdt} until:{enddt}"
+  limit=st.number_input("No. of tweets", min_value=0, max_value=1000,label_visibility="visible")
   limit = int(limit)
   data = twitter_scrape(query,limit)
+  st.balloons()
   st.dataframe(data=data)
   if st.button("Upload"):
      mongo_up(data)
